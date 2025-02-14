@@ -10,11 +10,11 @@ import UIKit
 public struct CameraPickerResult: Sendable {
     public var originalImage: UIImage?
 
-    init(originalImage: UIImage? = nil) {
+    public init(originalImage: UIImage? = nil) {
         self.originalImage = originalImage
     }
 
-    init(_ keyValues: [UIImagePickerController.InfoKey: Any]) {
+    public init(_ keyValues: [UIImagePickerController.InfoKey: Any]) {
         originalImage = keyValues[.originalImage] as? UIImage
     }
 }

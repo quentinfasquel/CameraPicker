@@ -7,4 +7,3 @@ public protocol CameraPicker {
     func takePicture() async -> CameraPickerResult
     func dismiss()
 }
-

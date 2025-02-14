@@ -8,7 +8,7 @@
 import SwiftUI
 import CoreImage.CIFilterBuiltins
 
-public struct CameraPickerMock: CameraPicker {
+public final class CameraPickerMock: CameraPicker {
 
     /// Delay in milliseconds
     public nonisolated(unsafe) static var delay: UInt64 = 200
@@ -24,12 +24,24 @@ public struct CameraPickerMock: CameraPicker {
     }
 
     var _dismiss: () -> Void
+    var _takePicture: () async -> CameraPickerResult
+
+    public init(
+        dismiss: @escaping () -> Void,
+        takePicture: @escaping () async -> CameraPickerResult = {
+            try? await Task.sleep(nanoseconds: CameraPickerMock.delay * NSEC_PER_MSEC)
+            return .init(originalImage: CameraPickerMock.imageGenerator())
+        }
+    ) {
+        _dismiss = dismiss
+        _takePicture = takePicture
+    }
+
     public func dismiss() {
         _dismiss()
     }
 
     public func takePicture() async -> CameraPickerResult {
-        try? await Task.sleep(nanoseconds: Self.delay * NSEC_PER_MSEC)
-        return .init(originalImage: Self.imageGenerator())
+        await _takePicture()
     }
 }
